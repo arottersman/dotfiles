@@ -1,0 +1,19 @@
+# Vim
+*~
+*.swp
+
+# Stuff Dir
+**/stuff
+
+# Spacemacs
+.projectile
+.#*
+
+# mac
+.DS_Store
+
+# serverless
+.serverless
+
+
+
