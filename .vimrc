@@ -10,29 +10,51 @@ Plug '/usr/local/opt/fzf'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'jparise/vim-graphql'
 Plug 'pangloss/vim-javascript'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'cormacrelf/vim-colors-github'
+Plug 'sindrets/diffview.nvim'
 Plug 'NLKNguyen/papercolor-theme'
-Plug 'Shougo/defx.nvim'
-Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
+Plug 'mzlogin/vim-markdown-toc'
+Plug 'ryanoasis/vim-devicons'
+Plug 'nvim-tree/nvim-web-devicons'
+Plug 'kburdett/vim-nuuid'
+Plug 'jxnblk/vim-mdx-js'
+Plug 'ghifarit53/tokyonight-vim'
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+Plug 'github/copilot.vim'
+" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 " Initialize plugin system
 call plug#end()
+
+set encoding=UTF-8
 
 """ Python required for defx deps
 set pyxversion=3
 
 """ COLORS
-set t_Co=256   " This is may or may not be needed...
+" set t_Co=256   " This is may or may not be needed...
+" let &t_ZH="\e[3m"
+" let &t_ZR="\e[23m"
+"" set background=light
+"" let g:github_colors_soft = 1
+"" colorscheme github
+"" colorscheme tokyonight
+"" let g:tokyonight_style = 'night' " available: night, storm
+"" let g:tokyonight_enable_italic = 1
 
-set background=light
-colorscheme PaperColor "colorscheme (elflord/slate/torte)
+colorscheme catppuccin-mocha " catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
+
+
+
+" colorscheme dracula "colorscheme (elflord/slate/torte)
 syntax enable           " enable syntax processing
+highlight CopilotSuggestion guifg=#555555 ctermfg=8
 
 """ TABS & SPACES
 set tabstop=2       " number of visual spaces per TAB
@@ -42,7 +64,11 @@ set expandtab       " tabs are spaces
 """ LINE STUFF
 set relativenumber              " show line numbers
 set cursorline                  " highlight current line
-hi CursorLine term=bold cterm=bold guibg=Grey40 ctermbg=15
+" hi CursorLine term=bold cterm=bold guibg='DraculaBgDarker' ctermbg" =15
+" hi CursorLine term=bold cterm=bold guibg=Black ctermbg=0
+
+hi MoreMsg     term=bold ctermfg=29 gui=bold guifg=#22863a
+
 
 """ MENU AND RENDERING
 set wildmenu            " visual autocomplete for command menu
@@ -63,18 +89,9 @@ set backspace=indent,eol,start
 """ clippy clappy boards (set to system)
 set clipboard=unnamedplus
 
-""" TMUX
-" allows cursor change in tmux mode
-if exists('$TMUX')
-    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-else
-    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-endif
-
 """ airline
-let g:airline_theme='papercolor'
+" let g:airline_theme='papercolor'
+let g:airline_theme = "github"
 
 """ Remaps
 :noremap <C-f> :Files <CR>
@@ -104,6 +121,9 @@ set grepprg=rg\ --vimgrep
 " enable jsdoc highlighting
 let g:javascript_plugin_jsdoc = 1
 
+""" Fugitive
+command -nargs=* Glg Git! lg <args>
+
 """ COC
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
@@ -124,83 +144,11 @@ function! s:show_documentation()
   endif
 endfunction
 
-"" Defx file tree config
-autocmd BufWritePost * call defx#redraw()
-nnoremap <silent><leader>fl :Defx -split=vertical -winwidth=50 -direction=topleft<CR>
-nnoremap <silent><leader>ft :Defx -toggle -resume -split=vertical -winwidth=50 -direction=topleft<CR>
-nnoremap <silent><leader>fc :Defx -resume -split=vertical -winwidth=50 -direction=topleft -search=`expand('%:p')` `getcwd()`<CR>
-call defx#custom#option('_', {
-      \ 'columns': 'indent:icons:filename:type:git',
-      \ })
-autocmd FileType defx call s:defx_my_settings()
-
-function! s:defx_my_settings() abort
-  " Define mappings
-  nnoremap <silent><buffer><expr> <CR>
-        \ defx#is_directory() ?
-        \ defx#do_action('open_tree', 'toggle') :
-        \ defx#do_action('drop')
-  nnoremap <silent><buffer><expr> c
-        \ defx#do_action('copy')
-  nnoremap <silent><buffer><expr> m
-        \ defx#do_action('move')
-  nnoremap <silent><buffer><expr> p
-        \ defx#do_action('paste')
-  nnoremap <silent><buffer><expr> l
-        \ defx#do_action('open')
-  nnoremap <silent><buffer><expr> E
-        \ defx#do_action('open', 'vsplit')
-  nnoremap <silent><buffer><expr> P
-        \ defx#do_action('preview')
-  nnoremap <silent><buffer><expr> o
-        \ defx#do_action('open_tree', 'toggle')
-  nnoremap <silent><buffer><expr> K
-        \ defx#do_action('new_directory')
-  nnoremap <silent><buffer><expr> N
-        \ defx#do_action('new_file')
-  nnoremap <silent><buffer><expr> S
-        \ defx#do_action('toggle_sort', 'time')
-  nnoremap <silent><buffer><expr> d
-        \ defx#do_action('remove')
-  nnoremap <silent><buffer><expr> r
-        \ defx#do_action('rename')
-  nnoremap <silent><buffer><expr> !
-        \ defx#do_action('execute_command')
-  nnoremap <silent><buffer><expr> x
-        \ defx#do_action('execute_system')
-  nnoremap <silent><buffer><expr> yy
-        \ defx#do_action('yank_path')
-  nnoremap <silent><buffer><expr> .
-        \ defx#do_action('toggle_ignored_files')
-  nnoremap <silent><buffer><expr> ;
-        \ defx#do_action('repeat')
-  nnoremap <silent><buffer><expr> h
-        \ defx#do_action('cd', ['..'])
-  nnoremap <silent><buffer><expr> ~
-        \ defx#do_action('cd')
-  nnoremap <silent><buffer><expr> q
-        \ defx#do_action('quit')
-  nnoremap <silent><buffer><expr> <Space>
-        \ defx#do_action('toggle_select') . 'j'
-  nnoremap <silent><buffer><expr> *
-        \ defx#do_action('toggle_select_all')
-  nnoremap <silent><buffer><expr> j
-        \ line('.') == line('$') ? 'gg' : 'j'
-  nnoremap <silent><buffer><expr> k
-        \ line('.') == 1 ? 'G' : 'k'
-  nnoremap <silent><buffer><expr> <C-l>
-        \ defx#do_action('redraw')
-  nnoremap <silent><buffer><expr> <C-g>
-        \ defx#do_action('print')
-  nnoremap <silent><buffer><expr> cd
-        \ defx#do_action('change_vim_cwd')
-endfunction
+"" Coc explorer
+nmap <leader>fc :CocCommand explorer<CR>
+"" Coc Colors
+hi CocErrorFloat cterm=bold ctermfg=238 ctermbg=218 gui=bold guifg=#C8CED6 guibg=#f6f8fa
 
 
 """ GO
-let g:go_fmt_command = "goimports"
-let g:go_test_show_name=1
-
-""" SNIPPETS
-:iabbrev fc import React, { FC } from 'react';<CR>import styled from 'styled-components';<CR><CR>type ComponentProps = {};<CR><CR> const Component: FC<ComponentProps> = () => {<CR> return <></>;<CR> };<CR>export default Component;<CR><CR> // ====================== STYLE =====================
-
+autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.formatDocument')

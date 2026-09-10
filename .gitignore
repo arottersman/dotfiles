@@ -1,19 +1,60 @@
-# Vim
+# --- Secrets: never commit ---
+.config/gcloud/
+.config/github-copilot/
+.config/gh/hosts.yml
+.ssh/
+*.pem
+*_rsa
+*_ed25519
+.netrc
+.oden_credentials*
+**/credentials*
+**/*access_token*
+**/auth.db*
+
+# --- Installed artifacts / caches (reinstallable) ---
+.config/coc/extensions/*
+!.config/coc/extensions/package.json
+.config/yarn/
+.config/tfenv/
+.config/configstore/
+.vim/plugged/
+.config/nvim/pack/
+node_modules/
+**/venv/
+**/site-packages/
+
+# --- Machine-local state / history ---
+.config/coc/commands
+.config/coc/list_history.dat
+.config/coc/lists
+.config/coc/memos.json
+.config/pgcli/history
+.config/pgcli/log
+.config/mlflow/
+.config/openspec/
+.config/gtk-2.0/
+.vim/.netrwhist
+.viminfo
+.zcompdump*
+.zsh_history
+*_history
+
+# --- Oden-specific: leave behind ---
+.config/.jira/
+
+# --- Editor / OS noise ---
 *~
 *.swp
-
-# Stuff Dir
-**/stuff
-
-# Spacemacs
+.DS_Store
 .projectile
 .#*
-
-# mac
-.DS_Store
-
-# serverless
+**/stuff
 .serverless
 
-
-
+# Claude Code: machine-local state, keep only config
+.claude/*
+!.claude/CLAUDE.md
+!.claude/settings.json
+.claude/settings.local.json
+*.bak

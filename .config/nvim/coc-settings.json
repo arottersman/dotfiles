@@ -1,0 +1,16 @@
+{
+  "coc.preferences.formatOnSaveFiletypes": ["typescriptreact", "typescript", "javascript", "css", "markdown"],
+  "sql.formatOptions": {
+          "commaPosition": "before"
+  },
+  "explorer.icon.enableNerdfont": true,
+  "explorer.icon.enableDevicons": true,
+  "languageserver": {
+    "go": {
+      "command": "gopls",
+      "rootPatterns": ["go.mod"],
+      "trace.server": "verbose",
+      "filetypes": ["go"]
+    }
+  }
+}
